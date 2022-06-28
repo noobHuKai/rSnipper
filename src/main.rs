@@ -10,6 +10,7 @@ mod service;
 async fn main() -> Result<(), std::io::Error> {
     // open database
     let db: sled::Db = sled::open("rSnipperDB")?;
+
     // db.insert("key", "v1").unwrap();
 
     //  start server

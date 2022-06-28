@@ -1,6 +1,6 @@
 use poem::{
     handler,
-    web::{Data, Json},
+    web::{Data, Json, Path},
 };
 
 use crate::{response::JsonResponse, service::Tag};
@@ -13,18 +13,16 @@ pub fn echo() -> Json<JsonResponse> {
 
 #[handler]
 pub fn get_tags(db: Data<&Db>) -> Json<JsonResponse> {
-    println!(
-        "{:?}",
-        std::str::from_utf8(&db.get("$tags").unwrap().unwrap().to_vec())
-    );
-    Json(JsonResponse::ok_with_value(serde_json::json!([
-        "java", "python", "go"
-    ])))
+    match Tag::get_all(&db) {
+        Ok(res) => Json(JsonResponse::ok_with_value(serde_json::json!(res))),
+        Err(err) => Json(JsonResponse::fail(err.to_string())),
+    }
 }
 
 #[handler]
-pub fn post_tags(db: Data<&Db>) -> Json<JsonResponse> {
-    Tag::insert(&db, "aaa").unwrap();
-
-    Json(JsonResponse::ok_with_string("biu! biu! biu!".to_string()))
+pub fn post_tags(db: Data<&Db>, Path(tag): Path<String>) -> Json<JsonResponse> {
+    match Tag::insert(&db, &tag) {
+        Ok(_) => Json(JsonResponse::ok("ok".to_string())),
+        Err(err) => Json(JsonResponse::fail(err.to_string())),
+    }
 }

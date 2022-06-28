@@ -12,6 +12,9 @@ pub struct JsonResponse {
 }
 
 impl JsonResponse {
+    pub fn ok(data: String) -> Self {
+        Self::ok_with_string(data)
+    }
     pub fn ok_with_string(data: String) -> Self {
         Self {
             code: RESPONSE_STATUS_CODE_SUCCESS,
