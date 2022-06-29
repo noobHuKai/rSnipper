@@ -1,0 +1,1 @@
+<template>bottom bar</template>

@@ -1,5 +1,7 @@
 <template>
-  <HomePageVue></HomePageVue>
+  <n-message-provider>
+    <HomePageVue></HomePageVue>
+  </n-message-provider>
 </template>
 
 <script setup lang="ts">
