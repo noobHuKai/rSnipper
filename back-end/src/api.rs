@@ -3,8 +3,9 @@ use poem::{
     web::{Data, Json, Path},
 };
 
-use crate::{response::JsonResponse, service::Tag};
-use sled::Db;
+use crate::response::JsonResponse;
+use crate::service::TagService;
+use sqlx::{Pool, Sqlite};
 
 #[handler]
 pub fn echo() -> Json<JsonResponse> {
@@ -12,16 +13,16 @@ pub fn echo() -> Json<JsonResponse> {
 }
 
 #[handler]
-pub fn get_tags(db: Data<&Db>) -> Json<JsonResponse> {
-    match Tag::get_all(&db) {
+pub async fn get_tags(db: Data<&Pool<Sqlite>>) -> Json<JsonResponse> {
+    match TagService::get_all(&db).await {
         Ok(res) => Json(JsonResponse::ok_with_value(serde_json::json!(res))),
         Err(err) => Json(JsonResponse::fail(err.to_string())),
     }
 }
 
 #[handler]
-pub fn post_tags(db: Data<&Db>, Path(tag): Path<String>) -> Json<JsonResponse> {
-    match Tag::insert(&db, &tag) {
+pub async fn post_tags(db: Data<&Pool<Sqlite>>, Path(tag): Path<String>) -> Json<JsonResponse> {
+    match TagService::insert(&db, tag).await {
         Ok(_) => Json(JsonResponse::ok("ok".to_string())),
         Err(err) => Json(JsonResponse::fail(err.to_string())),
     }

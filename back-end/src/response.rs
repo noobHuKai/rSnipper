@@ -1,8 +1,7 @@
 use serde::Serialize;
 use serde_json::Value;
 
-const RESPONSE_STATUS_CODE_SUCCESS: u32 = 200;
-const RESPONSE_STATUS_CODE_FAILURE: u32 = 500;
+use crate::common::{RESPONSE_STATUS_CODE_FAILURE, RESPONSE_STATUS_CODE_SUCCESS};
 
 #[derive(Serialize)]
 pub struct JsonResponse {
