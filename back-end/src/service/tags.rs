@@ -44,4 +44,17 @@ impl TagService {
             None => Ok(false),
         }
     }
+
+    pub async fn delete(pool: &SqlitePool, tag: String) -> Result<()> {
+        let mut conn = pool.acquire().await?;
+        sqlx::query(
+            r#"
+            DELETE FROM tags WHERE tag = ?1
+            "#,
+        )
+        .bind(tag)
+        .execute(&mut conn)
+        .await?;
+        Ok(())
+    }
 }

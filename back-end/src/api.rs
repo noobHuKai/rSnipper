@@ -13,7 +13,7 @@ pub fn echo() -> Json<JsonResponse> {
 }
 
 #[handler]
-pub async fn get_tags(db: Data<&Pool<Sqlite>>) -> Json<JsonResponse> {
+pub async fn get_tag(db: Data<&Pool<Sqlite>>) -> Json<JsonResponse> {
     match TagService::get_all(&db).await {
         Ok(res) => Json(JsonResponse::ok_with_value(serde_json::json!(res))),
         Err(err) => Json(JsonResponse::fail(err.to_string())),
@@ -21,8 +21,16 @@ pub async fn get_tags(db: Data<&Pool<Sqlite>>) -> Json<JsonResponse> {
 }
 
 #[handler]
-pub async fn post_tags(db: Data<&Pool<Sqlite>>, Path(tag): Path<String>) -> Json<JsonResponse> {
+pub async fn post_tag(db: Data<&Pool<Sqlite>>, Path(tag): Path<String>) -> Json<JsonResponse> {
     match TagService::insert(&db, tag).await {
+        Ok(_) => Json(JsonResponse::ok("ok".to_string())),
+        Err(err) => Json(JsonResponse::fail(err.to_string())),
+    }
+}
+
+#[handler]
+pub async fn delete_tag(db: Data<&Pool<Sqlite>>, Path(tag): Path<String>) -> Json<JsonResponse> {
+    match TagService::delete(&db, tag).await {
         Ok(_) => Json(JsonResponse::ok("ok".to_string())),
         Err(err) => Json(JsonResponse::fail(err.to_string())),
     }
