@@ -7,9 +7,10 @@ impl Tag {
     pub fn insert(db: &Db, tag: &str) -> Result<(), Error> {
         match db.get(TAGSKEY)? {
             Some(value) => {
+                let a = tag.as_bytes();
                 for s in value.split(|c| c == &b',') {
                     // is exist
-                    if s == tag.as_bytes() {
+                    if s == a {
                         return Err(Error::Unsupported("Key Is Exist".to_string()));
                     }
                 }

@@ -1,7 +1,6 @@
 use poem::{listener::TcpListener, middleware::AddData, EndpointExt, Server};
 
 mod api;
-#[allow(dead_code)]
 mod response;
 mod router;
 mod service;
